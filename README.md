@@ -81,6 +81,7 @@ gibi bir URL girin (sondaki / olmadan).
 | `Ctrl + Shift + Alt + F12`       | DevTools aç/kapa                 |
 | `Ctrl + Shift + Alt + R`         | Frontend'i yeniden yükle         |
 | `Ctrl + Shift + Alt + S`         | Setup ekranını aç (URL değiştir) |
+| `Ctrl + Shift + Alt + I`         | Hakkında / bilgi paneli (sürüm, UUID, güncelleme) |
 | `Ctrl + Shift + Alt + Q`         | Uygulamayı kapat (kapatma engelini bypass eder) |
 | `F12` *(dev modda)*              | DevTools                         |
 

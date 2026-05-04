@@ -12,12 +12,14 @@ const PRELOAD_PATH = path.join(__dirname, '..', 'preload', 'index.js')
 const SETUP_HTML = path.join(__dirname, '..', 'renderer', 'setup', 'index.html')
 const SPLASH_HTML = path.join(__dirname, '..', 'renderer', 'splash', 'index.html')
 const OFFLINE_HTML = path.join(__dirname, '..', 'renderer', 'offline', 'index.html')
+const ABOUT_HTML = path.join(__dirname, '..', 'renderer', 'about', 'index.html')
 
 const SPLASH_FALLBACK_MS = 12000
 const OFFLINE_AUTO_RETRY_MS = 10000
 
 let mainWindow = null
 let splashWindow = null
+let aboutWindow = null
 let allowQuit = false
 let currentView = 'splash' // 'splash' | 'setup' | 'frontend' | 'offline'
 let pendingRetryTimer = null
@@ -290,6 +292,11 @@ ipcMain.handle('terminal:quit', () => {
   app.exit(0)
 })
 
+// ---- About IPC ----
+
+ipcMain.handle('terminal:open-about', () => openAboutWindow())
+ipcMain.handle('terminal:close-about', () => closeAboutWindow())
+
 // ---- Updater IPC ----
 
 ipcMain.handle('terminal:check-updates', () => updater.triggerCheck('manual'))
@@ -300,9 +307,65 @@ ipcMain.handle('terminal:install-update', () => {
 })
 
 function broadcastToRenderer(channel, payload) {
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.webContents.send(channel, payload)
+  for (const win of [mainWindow, aboutWindow]) {
+    if (win && !win.isDestroyed()) {
+      win.webContents.send(channel, payload)
+    }
   }
+}
+
+// ---- About window ----
+
+function openAboutWindow() {
+  if (aboutWindow && !aboutWindow.isDestroyed()) {
+    aboutWindow.focus()
+    return
+  }
+
+  const parent = mainWindow && !mainWindow.isDestroyed() ? mainWindow : undefined
+
+  aboutWindow = new BrowserWindow({
+    width: 520,
+    height: 640,
+    parent,
+    modal: Boolean(parent),
+    frame: false,
+    transparent: true,
+    backgroundColor: '#00000000',
+    resizable: false,
+    minimizable: false,
+    maximizable: false,
+    skipTaskbar: true,
+    alwaysOnTop: true,
+    show: false,
+    autoHideMenuBar: true,
+    title: 'CNC-MES Terminal — Hakkında',
+    webPreferences: {
+      preload: PRELOAD_PATH,
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: false,
+    },
+  })
+
+  aboutWindow.loadFile(ABOUT_HTML).catch((err) => {
+    console.error('[main] about ekranı yüklenemedi:', err.message)
+  })
+
+  aboutWindow.once('ready-to-show', () => {
+    if (aboutWindow) aboutWindow.show()
+  })
+
+  aboutWindow.on('closed', () => {
+    aboutWindow = null
+  })
+}
+
+function closeAboutWindow() {
+  if (aboutWindow && !aboutWindow.isDestroyed()) {
+    aboutWindow.close()
+  }
+  aboutWindow = null
 }
 
 // ---- App lifecycle ----
@@ -341,6 +404,9 @@ if (!gotLock) {
     globalShortcut.register('Control+Shift+Alt+Q', () => {
       allowQuit = true
       app.exit(0)
+    })
+    globalShortcut.register('Control+Shift+Alt+I', () => {
+      openAboutWindow()
     })
     if (isDev) {
       globalShortcut.register('F12', () => {

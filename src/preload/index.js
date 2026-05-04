@@ -24,6 +24,10 @@ contextBridge.exposeInMainWorld('cncMesTerminal', {
   /** Offline ekranından setup'a dön. */
   openSetup: () => ipcRenderer.invoke('terminal:open-setup'),
 
+  /** Hakkında modalı aç (Ctrl+Shift+Alt+I shortcut zaten aynı işi yapar). */
+  openAbout: () => ipcRenderer.invoke('terminal:open-about'),
+  closeAbout: () => ipcRenderer.invoke('terminal:close-about'),
+
   /** Uygulamayı tamamen yeniden başlat. */
   relaunch: () => ipcRenderer.invoke('terminal:relaunch'),
 

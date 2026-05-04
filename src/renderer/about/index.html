@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hakkında — CNC-MES Terminal</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'" />
+  <link rel="stylesheet" href="about.css" />
+</head>
+<body>
+  <main class="card">
+    <header class="hero">
+      <div class="logo">⚙</div>
+      <div>
+        <h1>CNC-MES Terminal</h1>
+        <p class="subtitle">Endüstriyel kiosk — saha desteği bilgi paneli</p>
+      </div>
+    </header>
+
+    <section class="block">
+      <h2>Cihaz</h2>
+      <dl class="info">
+        <div><dt>Sürüm</dt><dd id="version">—</dd></div>
+        <div><dt>Terminal Adı</dt><dd id="name">—</dd></div>
+        <div><dt>UUID</dt><dd id="uuid" class="mono">—</dd></div>
+        <div><dt>Hostname</dt><dd id="hostname" class="mono">—</dd></div>
+        <div><dt>Platform</dt><dd id="platform" class="mono">—</dd></div>
+        <div><dt>Otomatik başlat</dt><dd id="autoLaunch">—</dd></div>
+      </dl>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <h2>Güncelleme</h2>
+        <span id="update-badge" class="badge">—</span>
+      </div>
+      <p class="update-detail" id="update-detail">Durum sorgulanıyor…</p>
+      <div class="actions">
+        <button type="button" class="ghost" id="check-updates">Şimdi kontrol et</button>
+        <button type="button" class="primary" id="install-update" disabled>Yükle ve yeniden başlat</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <button type="button" class="ghost" id="setup">Ayarları aç</button>
+      <button type="button" class="ghost" id="relaunch">Uygulamayı yeniden başlat</button>
+      <button type="button" class="primary" id="close">Kapat</button>
+    </footer>
+  </main>
+
+  <script src="about.js"></script>
+</body>
+</html>
