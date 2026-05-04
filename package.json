@@ -15,9 +15,8 @@
     "dev": "cross-env CNC_MES_DEV=1 electron .",
     "lint": "eslint src --ext .js",
     "build": "electron-builder",
-    "build:win": "electron-builder --win",
-    "pack": "electron-builder --dir",
-    "release:win": "electron-builder --win --publish always"
+    "build:win": "electron-builder --win --publish never",
+    "pack": "electron-builder --dir"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
@@ -60,10 +59,10 @@
     },
     "publish": [
       {
-        "provider": "github",
-        "owner": "mnbyazilim-design",
-        "repo": "cnc-mes-terminal",
-        "releaseType": "release"
+        "provider": "generic",
+        "url": "https://app.example.invalid/api/terminal-updates/stable",
+        "channel": "stable",
+        "useMultipleRangeRequest": false
       }
     ]
   },

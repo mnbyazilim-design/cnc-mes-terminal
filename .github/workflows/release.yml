@@ -1,7 +1,7 @@
 name: Release
 
 # Tetikleyiciler:
-#   - tag push (v*)        → otomatik build + GitHub Releases'e yayınla
+#   - tag push (v*)        → otomatik build + Laravel update feed'ine publish
 #   - workflow_dispatch    → manuel çalıştır (build alır ama publish etmez)
 on:
   push:
@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write   # Release oluşturmak için gerekli
+  contents: read
 
 jobs:
   build-windows:
@@ -34,22 +34,58 @@ jobs:
         run: npm run lint --if-present
         continue-on-error: true
 
-      - name: Build & publish (tag push)
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Build (NSIS + portable, no publish)
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Kod imzalama (opsiyonel — secret yoksa imzasız build):
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-        run: npm run release:win
-
-      - name: Build only (manual dispatch)
-        if: github.event_name == 'workflow_dispatch'
-        env:
-          # Manuel dispatch'de imzalı build alabilmek için secret'lar yine aktif
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
         run: npm run build:win
+
+      - name: Publish to Laravel update feed (tag push)
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        env:
+          RELEASE_PUBLISH_URL: ${{ secrets.RELEASE_PUBLISH_URL }}
+          RELEASE_PUBLISH_TOKEN: ${{ secrets.RELEASE_PUBLISH_TOKEN }}
+          RELEASE_CHANNEL: stable
+        run: |
+          set -euo pipefail
+
+          if [ -z "${RELEASE_PUBLISH_URL:-}" ] || [ -z "${RELEASE_PUBLISH_TOKEN:-}" ]; then
+            echo "::error::RELEASE_PUBLISH_URL veya RELEASE_PUBLISH_TOKEN secret tanımsız."
+            exit 1
+          fi
+
+          # latest.yml'den meta bilgisini çek (top-level alanlar)
+          version=$(grep -E '^version:' dist/latest.yml | head -1 | sed -E 's/^version:\s*//' | tr -d '\r' | xargs)
+          file_name=$(grep -E '^path:' dist/latest.yml | head -1 | sed -E 's/^path:\s*//' | tr -d '\r' | xargs)
+          sha=$(grep -E '^sha512:' dist/latest.yml | head -1 | sed -E 's/^sha512:\s*//' | tr -d '\r' | xargs)
+
+          if [ -z "$version" ] || [ -z "$file_name" ] || [ -z "$sha" ]; then
+            echo "::error::latest.yml parse edilemedi (version/path/sha512 boş)."
+            cat dist/latest.yml
+            exit 1
+          fi
+
+          echo "Publishing v${version} → ${RELEASE_PUBLISH_URL}"
+          echo "Setup: dist/${file_name}"
+
+          # blockmap dosyası genelde üretilir ama yoksa atla
+          blockmap_arg=()
+          if [ -f "dist/${file_name}.blockmap" ]; then
+            blockmap_arg=(-F "blockmap=@dist/${file_name}.blockmap")
+          fi
+
+          curl -fSsL -X POST "${RELEASE_PUBLISH_URL}" \
+            -H "Authorization: Bearer ${RELEASE_PUBLISH_TOKEN}" \
+            -F "channel=${RELEASE_CHANNEL}" \
+            -F "version=${version}" \
+            -F "file_name=${file_name}" \
+            -F "sha512=${sha}" \
+            -F "latest_yml=<dist/latest.yml" \
+            -F "setup=@dist/${file_name}" \
+            "${blockmap_arg[@]}" \
+            -F "activate=1"
 
       - name: Upload artifacts (manual dispatch)
         if: github.event_name == 'workflow_dispatch'

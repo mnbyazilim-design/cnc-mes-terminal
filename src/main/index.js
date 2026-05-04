@@ -384,7 +384,13 @@ if (!gotLock) {
 
   app.whenReady().then(() => {
     syncAutoLaunchFromConfig()
-    updater.init({ isDev, forwardToRenderer: broadcastToRenderer })
+    const cfg = config.ensureConfig()
+    updater.init({
+      isDev,
+      forwardToRenderer: broadcastToRenderer,
+      backendUrl: cfg?.backendUrl,
+      terminalUuid: cfg?.uuid,
+    })
     createSplash()
     createMainWindow()
 
