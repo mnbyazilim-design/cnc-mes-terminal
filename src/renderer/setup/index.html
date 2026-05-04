@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>CNC-MES Terminal — Kurulum</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'" />
+  <link rel="stylesheet" href="setup.css" />
+</head>
+<body>
+  <main class="card">
+    <header class="hero">
+      <div class="logo">⚙</div>
+      <h1>CNC-MES Terminal</h1>
+      <p class="subtitle">İlk kurulum — bu cihazı sunucuya bağlayın</p>
+    </header>
+
+    <form id="setup-form" class="form" novalidate>
+      <label class="field">
+        <span class="label">Sunucu Adresi <em>*</em></span>
+        <input
+          id="backendUrl"
+          name="backendUrl"
+          type="url"
+          placeholder="https://app.firma.com"
+          autocomplete="off"
+          autofocus
+          required
+        />
+        <span class="hint">CNC-MES web arayüzünün tam URL'si. Örn: https://mes.firma.com</span>
+      </label>
+
+      <label class="field">
+        <span class="label">Terminal Adı (opsiyonel)</span>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          placeholder="Atölye-1 / TZG-12 Terminal"
+          autocomplete="off"
+        />
+        <span class="hint">Yönetici panelinde tanımak için. Sonra değiştirilebilir.</span>
+      </label>
+
+      <div id="error" class="error" hidden></div>
+
+      <div class="info">
+        <div class="info-row">
+          <span>Cihaz UUID</span>
+          <code id="uuid">—</code>
+        </div>
+        <div class="info-row">
+          <span>Hostname</span>
+          <code id="hostname">—</code>
+        </div>
+        <div class="info-row">
+          <span>Sürüm</span>
+          <code id="version">—</code>
+        </div>
+      </div>
+
+      <button type="submit" class="primary" id="submit">Kaydet ve Bağlan</button>
+      <button type="button" class="ghost" id="quit">Kapat</button>
+    </form>
+
+    <footer class="footer">
+      <p>Kurulum sonrası UUID değişmez. Yöneticiniz, sunucu tarafında bu UUID'yi tezgaha eşler.</p>
+    </footer>
+  </main>
+
+  <script src="setup.js"></script>
+</body>
+</html>

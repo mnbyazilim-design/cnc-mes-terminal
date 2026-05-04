@@ -1,0 +1,53 @@
+{
+  "name": "cnc-mes-terminal",
+  "productName": "CNC-MES Terminal",
+  "version": "0.1.0",
+  "description": "CNC-MES endüstriyel terminal kabuk uygulaması — operatör ekranını kiosk modda çalıştırır.",
+  "main": "src/main/index.js",
+  "private": true,
+  "author": {
+    "name": "MNB Yazılım",
+    "email": "mnbyazilim@gmail.com"
+  },
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dev": "cross-env CNC_MES_DEV=1 electron .",
+    "lint": "eslint src --ext .js",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "pack": "electron-builder --dir"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8",
+    "eslint": "^9.17.0"
+  },
+  "build": {
+    "appId": "com.mnbyazilim.cncmesterminal",
+    "productName": "CNC-MES Terminal",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}
