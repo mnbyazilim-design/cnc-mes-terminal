@@ -6,15 +6,16 @@ const crypto = require('node:crypto')
 const { app } = require('electron')
 
 const CONFIG_FILENAME = 'terminal.json'
-const SCHEMA_VERSION = 1
+const SCHEMA_VERSION = 2
 
 /**
  * userData içinde terminal.json:
  *   {
- *     "schemaVersion": 1,
+ *     "schemaVersion": 2,
  *     "uuid": "...",
  *     "backendUrl": "https://app.cnc-mes.com",
  *     "name": "TZG-12 Terminal",
+ *     "autoLaunch": true,        // v2 — Windows boot'unda otomatik başlasın mı
  *     "createdAt": "...",
  *     "updatedAt": "..."
  *   }
@@ -57,7 +58,15 @@ function writeConfig(config) {
 function ensureConfig() {
   const existing = readConfig()
   if (existing && existing.uuid) {
-    // Şema upgrade yeri (ileride buradan)
+    // v1 → v2 migration: autoLaunch default true
+    if (!existing.schemaVersion || existing.schemaVersion < 2) {
+      const upgraded = {
+        ...existing,
+        schemaVersion: SCHEMA_VERSION,
+        autoLaunch: existing.autoLaunch !== false,
+      }
+      return writeConfig(upgraded)
+    }
     return existing
   }
 
@@ -66,6 +75,7 @@ function ensureConfig() {
     uuid: crypto.randomUUID(),
     backendUrl: existing?.backendUrl || '',
     name: existing?.name || '',
+    autoLaunch: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   }

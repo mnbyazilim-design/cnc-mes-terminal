@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>CNC-MES Terminal — Bağlantı yok</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'" />
+  <link rel="stylesheet" href="offline.css" />
+</head>
+<body>
+  <main class="card">
+    <div class="hero">
+      <div class="icon">⚠</div>
+      <h1>Sunucuya bağlanılamadı</h1>
+      <p class="subtitle" id="subtitle">İnternet bağlantısını veya sunucu durumunu kontrol edin.</p>
+    </div>
+
+    <div class="info">
+      <div class="info-row">
+        <span>Sunucu</span>
+        <code id="backend-url">—</code>
+      </div>
+      <div class="info-row">
+        <span>Hata kodu</span>
+        <code id="error-code">—</code>
+      </div>
+      <div class="info-row" id="error-desc-row">
+        <span>Açıklama</span>
+        <code id="error-desc">—</code>
+      </div>
+      <div class="info-row">
+        <span>Son deneme</span>
+        <code id="last-try">—</code>
+      </div>
+    </div>
+
+    <div class="countdown">
+      <div class="bar"><div class="bar-fill" id="bar-fill"></div></div>
+      <p>
+        <span id="countdown-text">10 saniye sonra tekrar deneniyor…</span>
+      </p>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="primary" id="retry">Şimdi tekrar dene</button>
+      <button type="button" class="ghost" id="setup">Ayarları aç</button>
+    </div>
+
+    <footer class="footer">
+      <p>Bağlantı geri geldiğinde otomatik olarak operatör ekranına dönülür.</p>
+    </footer>
+  </main>
+
+  <script src="offline.js"></script>
+</body>
+</html>

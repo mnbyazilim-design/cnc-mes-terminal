@@ -79,6 +79,37 @@ html, body {
 }
 .hint { font-size: 11px; color: #64748b; }
 
+.toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color .15s;
+}
+.toggle:hover { border-color: #334155; }
+.toggle input[type="checkbox"] {
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  accent-color: #3b82f6;
+  cursor: pointer;
+}
+.toggle-text { display: flex; flex-direction: column; gap: 2px; }
+.toggle-text strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+.toggle-text em {
+  font-style: normal;
+  font-size: 11px;
+  color: #64748b;
+}
+
 .info {
   margin-top: 4px;
   background: #0f172a;

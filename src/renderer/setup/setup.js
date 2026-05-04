@@ -40,6 +40,8 @@ async function loadInfo() {
 
     if (cfg?.backendUrl) $('backendUrl').value = cfg.backendUrl
     if (cfg?.name) $('name').value = cfg.name
+    // autoLaunch default true; sadece açıkça false ise işaretle kaldır
+    $('autoLaunch').checked = cfg?.autoLaunch !== false
   } catch (err) {
     showError('Bilgiler okunamadı: ' + err.message)
   }
@@ -51,6 +53,7 @@ form.addEventListener('submit', async (event) => {
 
   const backendUrl = $('backendUrl').value.trim().replace(/\/+$/, '')
   const name = $('name').value.trim()
+  const autoLaunch = $('autoLaunch').checked
 
   if (!backendUrl) {
     showError('Sunucu adresi zorunludur.')
@@ -65,7 +68,7 @@ form.addEventListener('submit', async (event) => {
   submitBtn.textContent = 'Kaydediliyor…'
 
   try {
-    await window.cncMesTerminal.saveConfig({ backendUrl, name })
+    await window.cncMesTerminal.saveConfig({ backendUrl, name, autoLaunch })
     submitBtn.textContent = 'Yeniden başlatılıyor…'
     await window.cncMesTerminal.relaunch()
   } catch (err) {

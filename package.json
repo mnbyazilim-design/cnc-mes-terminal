@@ -16,7 +16,8 @@
     "lint": "eslint src --ext .js",
     "build": "electron-builder",
     "build:win": "electron-builder --win",
-    "pack": "electron-builder --dir"
+    "pack": "electron-builder --dir",
+    "release:win": "electron-builder --win --publish always"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
@@ -40,7 +41,11 @@
         "nsis",
         "portable"
       ],
-      "icon": "build/icon.ico"
+      "icon": "build/icon.ico",
+      "signingHashAlgorithms": ["sha256"],
+      "signtoolOptions": {
+        "signingHashAlgorithms": ["sha256"]
+      }
     },
     "nsis": {
       "oneClick": false,
@@ -48,6 +53,18 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "mnbyazilim-design",
+        "repo": "cnc-mes-terminal",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "dependencies": {
+    "electron-log": "^5.4.3",
+    "electron-updater": "^6.8.3"
   }
 }
