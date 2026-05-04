@@ -1,7 +1,7 @@
 {
   "name": "cnc-mes-terminal",
   "productName": "CNC-MES Terminal",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CNC-MES endüstriyel terminal kabuk uygulaması — operatör ekranını kiosk modda çalıştırır.",
   "main": "src/main/index.js",
   "private": true,
@@ -42,9 +42,13 @@
         "portable"
       ],
       "icon": "build/icon.ico",
-      "signingHashAlgorithms": ["sha256"],
+      "signingHashAlgorithms": [
+        "sha256"
+      ],
       "signtoolOptions": {
-        "signingHashAlgorithms": ["sha256"]
+        "signingHashAlgorithms": [
+          "sha256"
+        ]
       }
     },
     "nsis": {
