@@ -25,7 +25,6 @@ const DEFAULT_CHANNEL = 'stable'
 
 let initialized = false
 let lastStatus = { state: 'idle' }
-let periodicTimer = null
 
 function setupLogger() {
   log.transports.file.level = 'info'
@@ -130,7 +129,7 @@ function init(opts = {}) {
   log.info('[updater] ilk kontrol', Math.round(initialDelay / 1000), 'sn sonra')
 
   setTimeout(() => triggerCheck('initial'), initialDelay)
-  periodicTimer = setInterval(() => triggerCheck('periodic'), PERIODIC_INTERVAL_MS)
+  setInterval(() => triggerCheck('periodic'), PERIODIC_INTERVAL_MS)
 }
 
 function triggerCheck(reason = 'manual') {

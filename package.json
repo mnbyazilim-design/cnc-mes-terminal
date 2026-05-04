@@ -13,7 +13,7 @@
   "scripts": {
     "start": "electron .",
     "dev": "cross-env CNC_MES_DEV=1 electron .",
-    "lint": "eslint src --ext .js",
+    "lint": "eslint src",
     "build": "electron-builder",
     "build:win": "electron-builder --win --publish never",
     "pack": "electron-builder --dir"
